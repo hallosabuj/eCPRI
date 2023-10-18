@@ -1,10 +1,18 @@
 package ecpri
 
+import (
+	"fmt"
+)
+
 // Function to construct an eCPRI message
-func ConstructECPRIMessage(protocolVersion int, messageType int, concatenationIndicatitor int, pcId []byte, seqId []byte, bitSequence []byte) ([]byte, error) {
+func ConstructECPRIMessage(msg Message) ([]byte, error) {
 	var message []byte
-	if messageType == 1 {
-		message, _ = BuildMessageType_1(protocolVersion, messageType, concatenationIndicatitor, pcId, seqId, bitSequence)
+	if msg.MessageType == 1 {
+		if msg.Type_1 == nil {
+			fmt.Println("not enough information to build message")
+			return nil, fmt.Errorf("not enough information to build message")
+		}
+		message, _ = BuildMessageType_1(msg.Type_1)
 	}
 	return message, nil
 }

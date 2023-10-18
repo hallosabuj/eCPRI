@@ -11,14 +11,24 @@ import (
 func main() {
 	//////////////////////////////////////////////////////////
 	// Creating eCPRI payload
-	pcId := []byte{18, 52}
-	seqId := []byte{13, 13}
-	bitSequence := []byte("Hello")
-	protocolVersion := 1
-	messageType := 1
-	concatenationIndicatitor := 0
+	// pcId := []byte{18, 52}
+	// seqId := []byte{13, 13}
+	// bitSequence := []byte("Hello")
+	// protocolVersion := 1
+	// messageType := 1
+	// concatenationIndicatitor := 0
 
-	ecpriMessage, _ := ecpri.ConstructECPRIMessage(protocolVersion, messageType, concatenationIndicatitor, pcId, seqId, bitSequence)
+	var msg ecpri.Message
+	msg.MessageType = 1
+	msg.Type_1 = &ecpri.MessageType_1{
+		ProtocolVersion:          1,
+		ConcatenationIndicatitor: 0,
+		PcId:                     [2]byte{18, 52},
+		SeqId:                    [2]byte{13, 13},
+		BitSequence:              []byte("Hello"),
+	}
+
+	ecpriMessage, _ := ecpri.ConstructECPRIMessage(msg)
 	fmt.Println("Constructed eCPRI message:", ecpriMessage)
 
 	//////////////////////////////////////////////////////////

@@ -27,22 +27,22 @@ func BuildHeader(protocolVersion int, messageType int, concatenationIndicatitor 
 	return header, nil
 }
 
-func BuildMessageType_1(protocolVersion int, messageType int, concatenationIndicatitor int, pcId []byte, seqId []byte, bitSequence []byte) ([]byte, error) {
+func BuildMessageType_1(msg *MessageType_1) ([]byte, error) {
 	// Build header
-	var payloadLength uint16 = uint16(len(pcId) + len(seqId) + len(bitSequence))
-	header, err := BuildHeader(protocolVersion, messageType, concatenationIndicatitor, payloadLength)
+	var payloadLength uint16 = uint16(len(&msg.PcId) + len(&msg.SeqId) + len(*(&msg.BitSequence)))
+	header, err := BuildHeader(msg.ProtocolVersion, 1, msg.ConcatenationIndicatitor, payloadLength)
 	if err != nil {
 		fmt.Println("unable to build header")
 		return nil, err
 	}
 
 	// Build payload
-	payload := make([]byte, len(pcId)+len(seqId))
-	payload[0] = pcId[0]
-	payload[1] = pcId[1]
-	payload[2] = seqId[0]
-	payload[3] = seqId[1]
-	payload = append(payload, bitSequence...)
+	payload := make([]byte, len(msg.PcId)+len(msg.SeqId))
+	payload[0] = msg.PcId[0]
+	payload[1] = msg.PcId[1]
+	payload[2] = msg.SeqId[0]
+	payload[3] = msg.SeqId[1]
+	payload = append(payload, *(&msg.BitSequence)...)
 
 	var message []byte
 	message = append(message, header...)
