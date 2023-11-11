@@ -13,6 +13,14 @@ func ConstructECPRIMessage(msg Message) ([]byte, error) {
 			return nil, fmt.Errorf("not enough information to build message")
 		}
 		message, _ = BuildMessageType_1(msg.Type_1)
+	} else if msg.MessageType == 2 {
+		if msg.Type_2 == nil {
+			fmt.Println("not enough information to build message")
+			return nil, fmt.Errorf("not enough information to build message")
+		}
+		message, _ = BuildMessageType_2(msg.Type_2)
+	} else {
+		return nil, fmt.Errorf("unknown message type")
 	}
 	return message, nil
 }
