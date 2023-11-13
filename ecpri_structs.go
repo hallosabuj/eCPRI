@@ -6,6 +6,18 @@ const (
 )
 
 // /////////////////////////////////////////////////////////
+// IQ Data
+type MessageType_0 struct {
+	ProtocolVersion          int
+	ConcatenationIndicatitor int
+	PcId                     [2]byte
+	SeqId                    [2]byte
+	IQData                   []byte
+}
+
+// /////////////////////////////////////////////////////////
+
+// /////////////////////////////////////////////////////////
 // Bit Sequence
 type MessageType_1 struct {
 	ProtocolVersion          int

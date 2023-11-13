@@ -27,6 +27,29 @@ func BuildHeader(protocolVersion int, messageType int, concatenationIndicatitor 
 	return header, nil
 }
 
+func BuildMessageType_0(msg *MessageType_0) ([]byte, error) {
+	// Build header
+	var payloadLength uint16 = uint16(4 + len(*(&msg.IQData)))
+	header, err := BuildHeader(msg.ProtocolVersion, 1, msg.ConcatenationIndicatitor, payloadLength)
+	if err != nil {
+		fmt.Println("unable to build header")
+		return nil, err
+	}
+
+	// Build payload
+	payload := make([]byte, 4)
+	payload[0] = msg.PcId[0]
+	payload[1] = msg.PcId[1]
+	payload[2] = msg.SeqId[0]
+	payload[3] = msg.SeqId[1]
+	payload = append(payload, *(&msg.IQData)...)
+
+	var message []byte
+	message = append(message, header...)
+	message = append(message, payload...)
+	return message, nil
+}
+
 func BuildMessageType_1(msg *MessageType_1) ([]byte, error) {
 	// Build header
 	var payloadLength uint16 = uint16(len(&msg.PcId) + len(&msg.SeqId) + len(*(&msg.BitSequence)))
