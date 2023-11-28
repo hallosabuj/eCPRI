@@ -126,8 +126,50 @@ type MessageType_6 struct {
 
 // /////////////////////////////////////////////////////////
 
+// /////////////////////////////////////////////////////////
+// Event Indication
+type Type7_EventType byte
+type Type7_RaiseOrCease byte
+
+const (
+	Type7_FaultIndication              Type7_EventType = 0x00
+	Type7_FaultIndicationAcknowledge   Type7_EventType = 0x01
+	Type7_NotificationIndication       Type7_EventType = 0x02
+	Type7_SynchronizationRequest       Type7_EventType = 0x03
+	Type7_SynchronizationAcknowledge   Type7_EventType = 0x04
+	Type7_SynchronizationEndIndication Type7_EventType = 0x05
+
+	Type7_RaiseAFault Type7_RaiseOrCease = 0x0
+	Type7_CeaseAFault Type7_RaiseOrCease = 0x1
+)
+
+type Type7_ElementDetails struct {
+	ElementId                 [2]byte
+	RaiseOrCease              Type7_RaiseOrCease // Usually 4 bit
+	FaultOrNotificationNumber uint16             // 12 bit
+	AdditionalInformation     [4]byte
+}
+
+type MessageType_7 struct {
+	ProtocolVersion          int
+	ConcatenationIndicatitor int
+	EventId                  byte
+	EventType                Type7_EventType
+	SequenceNumber           byte
+	NumberOfFaultOrNotif     uint8
+	ElementDetails           []Type7_ElementDetails
+}
+
+// /////////////////////////////////////////////////////////
+
 type Message struct {
 	MessageType int
+	Type_0      *MessageType_0
 	Type_1      *MessageType_1
 	Type_2      *MessageType_2
+	Type_3      *MessageType_3
+	Type_4      *MessageType_4
+	Type_5      *MessageType_5
+	Type_6      *MessageType_6
+	Type_7      *MessageType_7
 }

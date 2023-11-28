@@ -206,8 +206,49 @@ func BuildMessageType_6(msg *MessageType_6) ([]byte, error) {
 	payload := make([]byte, 3)
 	payload[0] = msg.ResetId[0]
 	payload[1] = msg.ResetId[1]
-	payload[3] = byte(msg.ResetCodeOp)
+	payload[2] = byte(msg.ResetCodeOp)
 	payload = append(payload, *(&msg.VendorSpecificpayload)...)
+
+	var message []byte
+	message = append(message, header...)
+	message = append(message, payload...)
+	return message, nil
+}
+
+func BuildMessageType_7(msg *MessageType_7) ([]byte, error) {
+	// Build header
+	var payloadLength uint16 = uint16(4 + msg.NumberOfFaultOrNotif*8)
+	header, err := BuildHeader(msg.ProtocolVersion, 6, msg.ConcatenationIndicatitor, payloadLength)
+	if err != nil {
+		fmt.Println("unable to build header")
+		return nil, err
+	}
+
+	// Build payload
+	payload := make([]byte, 4)
+	payload[0] = msg.EventId
+	payload[1] = byte(msg.EventType)
+	payload[2] = byte(msg.SequenceNumber)
+	payload[4] = byte(msg.NumberOfFaultOrNotif)
+	for _, element := range *(&msg.ElementDetails) {
+		id := make([]byte, 2)
+		id[0] = element.ElementId[0]
+		id[1] = element.ElementId[1]
+		payload = append(payload, id...)
+		if element.FaultOrNotificationNumber > 4095 {
+			fmt.Println("Fault or notification number contains more that 12 bit")
+			return nil, fmt.Errorf("wrong fault or notification number length")
+		}
+		payload = append(payload, byte(uint8((element.RaiseOrCease&0xff)<<4)|uint8(element.FaultOrNotificationNumber>>8&0xf)))
+		payload = append(payload, byte(element.FaultOrNotificationNumber&0xff))
+		additionalInformation := make([]byte, 4)
+		additionalInformation[0] = element.AdditionalInformation[0]
+		additionalInformation[1] = element.AdditionalInformation[1]
+		additionalInformation[2] = element.AdditionalInformation[2]
+		additionalInformation[3] = element.AdditionalInformation[3]
+		payload = append(payload, additionalInformation...)
+	}
+	// payload = append(payload, *(&msg.VendorSpecificpayload)...)
 
 	var message []byte
 	message = append(message, header...)
