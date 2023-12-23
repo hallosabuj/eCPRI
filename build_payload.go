@@ -30,7 +30,7 @@ func BuildHeader(protocolVersion int, messageType int, concatenationIndicatitor 
 func BuildMessageType_0(msg *MessageType_0) ([]byte, error) {
 	// Build header
 	var payloadLength uint16 = uint16(4 + len(*(&msg.IQData)))
-	header, err := BuildHeader(msg.ProtocolVersion, 1, msg.ConcatenationIndicatitor, payloadLength)
+	header, err := BuildHeader(msg.ProtocolVersion, 0, msg.ConcatenationIndicatitor, payloadLength)
 	if err != nil {
 		fmt.Println("unable to build header")
 		return nil, err
@@ -157,7 +157,7 @@ func BuildMessageType_4(msg *MessageType_4) ([]byte, error) {
 func BuildMessageType_5(msg *MessageType_5) ([]byte, error) {
 	// Build header
 	var payloadLength uint16 = uint16(20 + len(msg.DummyBytes))
-	header, err := BuildHeader(msg.ProtocolVersion, 4, msg.ConcatenationIndicatitor, payloadLength)
+	header, err := BuildHeader(msg.ProtocolVersion, 5, msg.ConcatenationIndicatitor, payloadLength)
 	if err != nil {
 		fmt.Println("unable to build header")
 		return nil, err
@@ -218,7 +218,7 @@ func BuildMessageType_6(msg *MessageType_6) ([]byte, error) {
 func BuildMessageType_7(msg *MessageType_7) ([]byte, error) {
 	// Build header
 	var payloadLength uint16 = uint16(4 + msg.NumberOfFaultOrNotif*8)
-	header, err := BuildHeader(msg.ProtocolVersion, 6, msg.ConcatenationIndicatitor, payloadLength)
+	header, err := BuildHeader(msg.ProtocolVersion, 7, msg.ConcatenationIndicatitor, payloadLength)
 	if err != nil {
 		fmt.Println("unable to build header")
 		return nil, err
@@ -229,7 +229,7 @@ func BuildMessageType_7(msg *MessageType_7) ([]byte, error) {
 	payload[0] = msg.EventId
 	payload[1] = byte(msg.EventType)
 	payload[2] = byte(msg.SequenceNumber)
-	payload[4] = byte(msg.NumberOfFaultOrNotif)
+	payload[3] = byte(msg.NumberOfFaultOrNotif)
 	for _, element := range *(&msg.ElementDetails) {
 		id := make([]byte, 2)
 		id[0] = element.ElementId[0]
