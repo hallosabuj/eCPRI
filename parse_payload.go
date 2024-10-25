@@ -34,3 +34,18 @@ func ParseMessageTye_1(messageBuffer []byte) *MessageType_1 {
 	messageBody.BitSequence = messageBuffer[8:payloadLength]
 	return &messageBody
 }
+
+func ParseMessageTye_2(messageBuffer []byte) *MessageType_2 {
+	var messageBody MessageType_2
+	// Parsing header
+	payloadLength := binary.BigEndian.Uint16(messageBuffer[2:4])
+	messageBody.ProtocolRevision = int((messageBuffer[0] >> 4) & 0x0f)
+	messageBody.ConcatenationIndicatitor = int(messageBuffer[0] & 0x01)
+	// Parsing payload
+	messageBody.RtcId[0] = messageBuffer[4]
+	messageBody.RtcId[1] = messageBuffer[5]
+	messageBody.SeqId[0] = messageBuffer[6]
+	messageBody.SeqId[1] = messageBuffer[7]
+	messageBody.RealTimeControlData = messageBuffer[8:payloadLength]
+	return &messageBody
+}
