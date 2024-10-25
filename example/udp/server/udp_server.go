@@ -5,6 +5,8 @@ import (
 	"log"
 	"net"
 	"time"
+
+	"github.com/hallosabuj/ecpri"
 )
 
 func main() {
@@ -29,6 +31,6 @@ func main() {
 func response(udpServer net.PacketConn, addr net.Addr, buf []byte) {
 	time := time.Now().Format(time.ANSIC)
 	responseStr := fmt.Sprintf("time received: %v. Your message: %v!", time, string(buf))
-
+	_ = ecpri.ParseECPRIMessage(buf)
 	udpServer.WriteTo([]byte(responseStr), addr)
 }

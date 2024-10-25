@@ -8,7 +8,7 @@ const (
 // /////////////////////////////////////////////////////////
 // IQ Data
 type MessageType_0 struct {
-	ProtocolVersion          int
+	ProtocolRevision         int
 	ConcatenationIndicatitor int
 	PcId                     [2]byte
 	SeqId                    [2]byte
@@ -20,7 +20,7 @@ type MessageType_0 struct {
 // /////////////////////////////////////////////////////////
 // Bit Sequence
 type MessageType_1 struct {
-	ProtocolVersion          int
+	ProtocolRevision         int
 	ConcatenationIndicatitor int
 	PcId                     [2]byte
 	SeqId                    [2]byte
@@ -32,7 +32,7 @@ type MessageType_1 struct {
 // /////////////////////////////////////////////////////////
 // Real-Time Control Data
 type MessageType_2 struct {
-	ProtocolVersion          int
+	ProtocolRevision         int
 	ConcatenationIndicatitor int
 	RtcId                    [2]byte
 	SeqId                    [2]byte
@@ -44,7 +44,7 @@ type MessageType_2 struct {
 // /////////////////////////////////////////////////////////
 // Generic Data Transfer
 type MessageType_3 struct {
-	ProtocolVersion          int
+	ProtocolRevision         int
 	ConcatenationIndicatitor int
 	PcId                     [4]byte
 	SeqId                    [4]byte
@@ -69,7 +69,7 @@ const (
 )
 
 type MessageType_4 struct {
-	ProtocolVersion           int
+	ProtocolRevision          int
 	ConcatenationIndicatitor  int
 	RemoteMemoryAccessId      byte
 	ReadWriteIndication       Type4_ReadOrWrite
@@ -96,7 +96,7 @@ const (
 )
 
 type MessageType_5 struct {
-	ProtocolVersion          int
+	ProtocolRevision         int
 	ConcatenationIndicatitor int
 	MeasurementId            byte
 	ActionType               Type5_ActionType
@@ -117,7 +117,7 @@ const (
 )
 
 type MessageType_6 struct {
-	ProtocolVersion          int
+	ProtocolRevision         int
 	ConcatenationIndicatitor int
 	ResetId                  [2]byte
 	ResetCodeOp              Type6_ResetCodeOp
@@ -151,7 +151,7 @@ type Type7_ElementDetails struct {
 }
 
 type MessageType_7 struct {
-	ProtocolVersion          int
+	ProtocolRevision         int
 	ConcatenationIndicatitor int
 	EventId                  byte
 	EventType                Type7_EventType

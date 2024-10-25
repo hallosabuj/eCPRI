@@ -61,14 +61,16 @@ func ConstructECPRIMessage(msg Message) ([]byte, error) {
 	return message, nil
 }
 
-// Function to parse an eCPRI message
-func ParseECPRIMessage(message []byte) (byte, []byte) {
-	// _ = message[ECPRIHeaderVersion]
-	// msgType := message[ECPRIHeaderMsgType]
-	// payloadLength := binary.BigEndian.Uint16(message[ECPRIHeaderPayload:])
-
-	// payload := message[ECPRIHeaderSize : ECPRIHeaderSize+payloadLength]
-
-	// return msgType, payload
-	return 1, nil
+// This takes message buffer with header
+func ParseECPRIMessage(messageBuffer []byte) Message {
+	var msg Message
+	if messageBuffer[1] == byte(0) {
+		fmt.Println("received message type is 0")
+		msg.MessageType = 0
+		msg.Type_0 = ParseMessageTye_0(messageBuffer)
+	} else {
+		fmt.Println("received message type is undefined")
+		msg.MessageType = -1
+	}
+	return msg
 }
