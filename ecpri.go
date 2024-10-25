@@ -76,6 +76,10 @@ func ParseECPRIMessage(messageBuffer []byte) Message {
 		fmt.Println("received message type is 2")
 		msg.MessageType = 2
 		msg.Type_2 = ParseMessageTye_2(messageBuffer)
+	} else if messageBuffer[1] == byte(3) {
+		fmt.Println("received message type is 3")
+		msg.MessageType = 3
+		msg.Type_3 = ParseMessageTye_3(messageBuffer)
 	} else {
 		fmt.Println("received message type is undefined")
 		msg.MessageType = -1
