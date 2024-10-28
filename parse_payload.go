@@ -90,3 +90,34 @@ func ParseMessageTye_4(messageBuffer []byte) *MessageType_4 {
 	messageBody.Data = messageBuffer[16 : 16+messageBody.Length]
 	return &messageBody
 }
+
+func ParseMessageTye_5(messageBuffer []byte) *MessageType_5 {
+	var messageBody MessageType_5
+	// Parsing header
+	payloadLength := binary.BigEndian.Uint16(messageBuffer[2:4])
+	messageBody.ProtocolRevision = int((messageBuffer[0] >> 4) & 0x0f)
+	messageBody.ConcatenationIndicatitor = int(messageBuffer[0] & 0x01)
+	// Parsing payload
+	messageBody.MeasurementId = messageBuffer[4]
+	messageBody.ActionType = Type5_ActionType(messageBuffer[5])
+	messageBody.TimeStamp[0] = messageBuffer[6]
+	messageBody.TimeStamp[1] = messageBuffer[7]
+	messageBody.TimeStamp[2] = messageBuffer[8]
+	messageBody.TimeStamp[3] = messageBuffer[9]
+	messageBody.TimeStamp[4] = messageBuffer[10]
+	messageBody.TimeStamp[5] = messageBuffer[11]
+	messageBody.TimeStamp[6] = messageBuffer[12]
+	messageBody.TimeStamp[7] = messageBuffer[13]
+	messageBody.TimeStamp[8] = messageBuffer[14]
+	messageBody.TimeStamp[9] = messageBuffer[15]
+	messageBody.CompensationValue[0] = messageBuffer[16]
+	messageBody.CompensationValue[1] = messageBuffer[17]
+	messageBody.CompensationValue[2] = messageBuffer[18]
+	messageBody.CompensationValue[3] = messageBuffer[19]
+	messageBody.CompensationValue[4] = messageBuffer[20]
+	messageBody.CompensationValue[5] = messageBuffer[21]
+	messageBody.CompensationValue[6] = messageBuffer[22]
+	messageBody.CompensationValue[7] = messageBuffer[23]
+	messageBody.DummyBytes = append(messageBody.DummyBytes, messageBuffer[24:payloadLength+4]...)
+	return &messageBody
+}
