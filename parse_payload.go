@@ -135,3 +135,31 @@ func ParseMessageTye_6(messageBuffer []byte) *MessageType_6 {
 	messageBody.VendorSpecificpayload = append(messageBody.VendorSpecificpayload, messageBuffer[7:payloadLength+4]...)
 	return &messageBody
 }
+
+func ParseMessageTye_7(messageBuffer []byte) *MessageType_7 {
+	var messageBody MessageType_7
+	// Parsing header
+	messageBody.ProtocolRevision = int((messageBuffer[0] >> 4) & 0x0f)
+	messageBody.ConcatenationIndicatitor = int(messageBuffer[0] & 0x01)
+	// Parsing payload
+	messageBody.EventId = messageBuffer[4]
+	messageBody.EventType = Type7_EventType(messageBuffer[5])
+	messageBody.SequenceNumber = messageBuffer[6]
+	messageBody.NumberOfFaultOrNotif = uint8(messageBuffer[7])
+	for i := 0; i < int(messageBody.NumberOfFaultOrNotif); i++ {
+		var FaultOrNofifElement Type7_ElementDetails
+		FaultOrNofifElement.ElementId[0] = messageBuffer[8+8*i]
+		FaultOrNofifElement.ElementId[1] = messageBuffer[9+8*i]
+		FaultOrNofifElement.RaiseOrCease = (Type7_RaiseOrCease(messageBuffer[10+8*i]>>4) & 0xF)
+		var faultNotifNumber [2]byte
+		faultNotifNumber[0] = messageBuffer[10+8*i] & 0x0F
+		faultNotifNumber[1] = messageBuffer[11+8*i]
+		FaultOrNofifElement.FaultOrNotificationNumber = binary.BigEndian.Uint16(faultNotifNumber[:])
+		FaultOrNofifElement.AdditionalInformation[0] = messageBuffer[12+8*i]
+		FaultOrNofifElement.AdditionalInformation[1] = messageBuffer[13+8*i]
+		FaultOrNofifElement.AdditionalInformation[2] = messageBuffer[14+8*i]
+		FaultOrNofifElement.AdditionalInformation[3] = messageBuffer[15+8*i]
+		messageBody.ElementDetails = append(messageBody.ElementDetails, FaultOrNofifElement)
+	}
+	return &messageBody
+}
