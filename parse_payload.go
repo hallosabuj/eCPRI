@@ -121,3 +121,17 @@ func ParseMessageTye_5(messageBuffer []byte) *MessageType_5 {
 	messageBody.DummyBytes = append(messageBody.DummyBytes, messageBuffer[24:payloadLength+4]...)
 	return &messageBody
 }
+
+func ParseMessageTye_6(messageBuffer []byte) *MessageType_6 {
+	var messageBody MessageType_6
+	// Parsing header
+	payloadLength := binary.BigEndian.Uint16(messageBuffer[2:4])
+	messageBody.ProtocolRevision = int((messageBuffer[0] >> 4) & 0x0f)
+	messageBody.ConcatenationIndicatitor = int(messageBuffer[0] & 0x01)
+	// Parsing payload
+	messageBody.ResetId[0] = messageBuffer[4]
+	messageBody.ResetId[1] = messageBuffer[5]
+	messageBody.ResetCodeOp = Type6_ResetCodeOp(messageBuffer[6])
+	messageBody.VendorSpecificpayload = append(messageBody.VendorSpecificpayload, messageBuffer[7:payloadLength+4]...)
+	return &messageBody
+}
